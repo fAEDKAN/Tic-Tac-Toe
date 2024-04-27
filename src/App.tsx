@@ -1,12 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import Square from "./Square";
 
-export default function Board(): React.JSX.Element {
-  const [xIsNext, setXIsNext] = useState(true);
-  const [squares, setSquares] = useState(Array(9).fill(null));
-
+function Board({ xIsNext, squares, onPlay }): React.JSX.Element {
   function handleClick(i: number) {
-    if (squares[i] || calculateWinner(squares)) {
+    if (calculateWinner(squares) || squares[i]) {
       return;
     }
     const nextSquares = squares.slice();
@@ -15,37 +12,36 @@ export default function Board(): React.JSX.Element {
     } else {
       nextSquares[i] = "O";
     }
-    setSquares(nextSquares);
-    setXIsNext(!xIsNext);
+    onPlay(nextSquares);
   }
 
   const winner = calculateWinner(squares);
   let status;
   if (winner) {
-    status = "Winner: " + winner;
+    status = `Winner: ${winner}`;
   } else {
-    status = "Next player: " + (xIsNext ? "X" : "O");
+    status = `Next Player: ${xIsNext ? "X" : "O"}`;
   }
-
   return (
     <>
       <div className="flex flex-col items-center justify-center h-screen">
-        <div className="mb-4">{status}</div>
+        <div className="mb-4 font-bold">{status}</div>
         <div className="grid grid-cols-3 gap-4 bg-red-600">
-          {squares.map((value, index) => (
-            <Square
-              key={index}
-              value={value}
-              onSquareClick={() => handleClick(index)}
-            />
-          ))}
+          {squares &&
+            squares.map((value, index) => (
+              <Square
+                key={index}
+                value={value}
+                onSquareClick={() => handleClick(index)}
+              />
+            ))}
         </div>
       </div>
     </>
   );
 }
 
-function calculateWinner(squares) {
+function calculateWinner(squares: Array<string | null>) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -64,3 +60,5 @@ function calculateWinner(squares) {
   }
   return null;
 }
+
+export default Board;

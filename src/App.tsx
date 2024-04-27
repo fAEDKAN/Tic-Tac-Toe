@@ -24,7 +24,7 @@ function Board({ xIsNext, squares, onPlay }): React.JSX.Element {
   }
   return (
     <>
-      <div className="flex flex-col items-center justify-center h-screen">
+      <div className="flex flex-col items-center justify-center">
         <div className="mb-4 font-bold">{status}</div>
         <div className="grid grid-cols-3 gap-4 bg-red-600">
           {squares &&
